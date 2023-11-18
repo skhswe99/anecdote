@@ -1,8 +1,8 @@
 import { useState } from 'react'
 
-const Button = ({handleClick}) => {
+const Button = ({getNextAnecdote}) => {
   return(
-    <button onClick={handleClick}>
+    <button onClick={getNextAnecdote}>
       next anecdote
     </button>
   )
@@ -32,28 +32,34 @@ const App = () => {
 
   const [selected, setSelected] = useState(0)
   const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0,0,anecdotes.length))
-
-  const handleClick = () => {
+  
+  const getNextAnecdote = () => { // WORKS!!!
     const index = Math.floor(Math.random() * anecdotes.length)
-    console.log(index)
     setSelected(index)
   }
 
   const handleVote = () => {
-    const newVoteCounts = [...votes]
-    newVoteCounts[selected]++
-    setVotes(newVoteCounts)
+    const voteCounts = [...votes]
+    voteCounts[selected]++
+    setVotes(voteCounts)
   }
 
-  console.log(votes)
-  console.log(selected)
-
+  const MostVoted = () => {
+    const mostVotedIndex = votes.indexOf(Math.max(...votes))
+    return(
+      <p>
+        {anecdotes[mostVotedIndex]}<br/>has {votes[mostVotedIndex]} votes
+      </p>
+    )
+  }
+  
   return (
     <div>
       <p>{anecdotes[selected]}</p>
       <p>has {votes[selected]} votes</p>
       <Vote handleVote={handleVote} />
-      <Button handleClick={handleClick} />
+      <Button getNextAnecdote={getNextAnecdote} />
+      <MostVoted votes={votes} />
     </div>
   )
 }
